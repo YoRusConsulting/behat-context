@@ -1,0 +1,21 @@
+{
+    "name": "appinweb/behat-context",
+    "description": "Provide some behat contexts",
+    "keywords": ["behat", "contexts", "orm", "amqp"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Contributors",
+            "homepage": "https://gitlab.altengroup.net/tma/alten/behat-context/activity"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "AppInWeb\\BehatContext\\": "src"
+        }
+    },
+    "require": {
+        "php": "^7.1",
+        "behat/behat": "~3.0"
+    }
+}
