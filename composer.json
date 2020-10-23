@@ -6,7 +6,7 @@
     "authors": [
         {
             "name": "Contributors",
-            "homepage": "https://gitlab.altengroup.net/tma/alten/behat-context/activity"
+            "homepage": "https://github.com/AppInWeb/behat-context"
         }
     ],
     "autoload": {
