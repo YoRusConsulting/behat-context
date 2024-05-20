@@ -1,6 +1,6 @@
 <?php
 
-namespace AppInWeb\BehatContext\AmqpAdapter;
+namespace Alten\BehatContext\AmqpAdapter;
 
 use Symfony\Component\Messenger\Transport\AmqpExt\Connection as AmqpConnection;
 

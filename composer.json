@@ -1,17 +1,15 @@
 {
-    "name": "appinweb/behat-context",
+    "name": "yorus/behat-context",
     "description": "Provide some behat contexts",
-    "keywords": ["behat", "contexts", "orm", "amqp"],
+    "keywords": ["behat", "contexts", "orm", "amqp", "fidry-alice"],
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Contributors",
-            "homepage": "https://github.com/AppInWeb/behat-context"
-        }
-    ],
+    "authors": [{
+        "name": "Yoann ROUSSEAU",
+        "homepage": "https://github.com/YoRusConsulting/behat-context"
+    }],
     "autoload": {
         "psr-4": {
-            "AppInWeb\\BehatContext\\": "src"
+            "YoRus\\BehatContext\\": "src"
         }
     },
     "require": {

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppInWeb\BehatContext\AmqpAdapter;
+namespace YoRus\BehatContext\AmqpAdapter;
 
 /**
  * Interface AdapterInterface
@@ -8,9 +8,9 @@ namespace AppInWeb\BehatContext\AmqpAdapter;
 interface AdapterInterface
 {
     /**
-     * @param string $transport transport
-     * @param string $content   content
-     * @param string $command   command
+     * @param string      $transport transport
+     * @param string      $content content
+     * @param string|null $command command
      *
      * @return void
      */

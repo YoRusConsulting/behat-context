@@ -1,0 +1,20 @@
+services:
+  YoRus\BehatContext\Domain\BehatStore: ~
+
+  YoRus\BehatContext\Domain\Jwt\Configuration:
+    arguments:
+      $configuration: '%yorus_behat_context.jwt_login%'
+
+  ##############################################################
+  ##### Argument Resolvers
+  ##############################################################
+  YoRus\BehatContext\App\Resolver\BehatStoreResolver:
+    arguments:
+      $store: '@YoRus\BehatContext\Domain\BehatStore'
+    tags: [ 'context.argument_resolver' ]
+
+  YoRus\BehatContext\App\Resolver\JwtConfigurationResolver:
+    arguments:
+      $jwtConfiguration: '@YoRus\BehatContext\Domain\Jwt\Configuration'
+    tags: [ 'context.argument_resolver' ]
+

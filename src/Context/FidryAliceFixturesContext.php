@@ -1,11 +1,12 @@
 <?php
 
-namespace AppInWeb\BehatContext;
+namespace YoRus\BehatContext;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Symfony2Extension\Context\KernelDictionary;
-
+use Doctrine\ORM\EntityManagerInterface;
+use Fidry\AliceDataFixtures\Persistence\PurgeMode;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 /**
  * FidryAliceFixturesContext
  *
@@ -13,12 +14,14 @@ use Behat\Symfony2Extension\Context\KernelDictionary;
  */
 class FidryAliceFixturesContext implements Context
 {
-    use KernelDictionary;
+    use ContainerAwareTrait;
 
     /**
      * @var string
      */
     private $basepath;
+
+    private ?PurgeMode $purgeMode = null;
 
     /**
      * @param string $basepath basepath
@@ -32,6 +35,21 @@ class FidryAliceFixturesContext implements Context
      * @Given I use fixture files:
      */
     public function iUseFixtureFiles(TableNode $table)
+    {
+        $this->purgeMode = PurgeMode::createTruncateMode();
+        $this->useFixtureFiles($table);
+    }
+
+    /**
+     * @Given I add fixture files:
+     */
+    public function iAddFixtureFiles(TableNode $table)
+    {
+        $this->purgeMode = PurgeMode::createNoPurgeMode();
+        $this->useFixtureFiles($table);
+    }
+
+    private function useFixtureFiles(TableNode $table)
     {
         $files = [];
 
@@ -58,8 +76,8 @@ class FidryAliceFixturesContext implements Context
     private function loadFiles(array $files): void
     {
         $em     = $this->getDoctrine();
-        $loader = $this->getContainer()->get('fidry_alice_data_fixtures.loader.doctrine');
-        $loader->load($files);
+        $loader = $this->container->get('fidry_alice_data_fixtures.loader.doctrine');
+        $loader->load($files, [], [], $this->purgeMode);
 
         $em->flush();
         $em->clear();
@@ -76,7 +94,7 @@ class FidryAliceFixturesContext implements Context
             $this->basepath = 'tests/fixtures';
         }
 
-        return $this->getContainer()->getParameter('kernel.project_dir').'/'.$this->basepath.'/'.$filename;
+        return $this->container->getParameter('kernel.project_dir').'/'.$this->basepath.'/'.$filename;
     }
 
     /**
@@ -84,6 +102,6 @@ class FidryAliceFixturesContext implements Context
      */
     private function getDoctrine()
     {
-        return $this->getContainer()->get('doctrine.orm.entity_manager');
+        return $this->container->get('doctrine.orm.entity_manager');
     }
 }

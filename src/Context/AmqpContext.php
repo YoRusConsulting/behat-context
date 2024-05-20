@@ -1,10 +1,10 @@
 <?php
 
-namespace AppInWeb\BehatContext;
+namespace YoRus\BehatContext;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
-use Behat\Symfony2Extension\Context\KernelDictionary;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * AmqpContext.
@@ -13,7 +13,7 @@ use Behat\Symfony2Extension\Context\KernelDictionary;
  */
 class AmqpContext implements Context
 {
-    use KernelDictionary;
+    use ContainerAwareTrait;
 
     /**
      * @var AmqpAdapter\AdapterInterface
