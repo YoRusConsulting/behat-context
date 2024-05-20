@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d56a0c6ad3de15488199b1182b8f82c8",
+    "content-hash": "c435e09d95935828511338fd82a44fb4",
     "packages": [
         {
             "name": "behat/behat",
@@ -1716,28 +1716,28 @@
         },
         {
             "name": "symfony/amqp-messenger",
-            "version": "v5.4.39",
+            "version": "v7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/amqp-messenger.git",
-                "reference": "252902bdd576b0a9279cb3d9b9f7e8317d1c54c3"
+                "reference": "2ee5d2574b3f745078eb3836ec60d1530aac184b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/amqp-messenger/zipball/252902bdd576b0a9279cb3d9b9f7e8317d1c54c3",
-                "reference": "252902bdd576b0a9279cb3d9b9f7e8317d1c54c3",
+                "url": "https://api.github.com/repos/symfony/amqp-messenger/zipball/2ee5d2574b3f745078eb3836ec60d1530aac184b",
+                "reference": "2ee5d2574b3f745078eb3836ec60d1530aac184b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5",
-                "symfony/deprecation-contracts": "^2.1|^3",
-                "symfony/messenger": "^5.3|^6.0"
+                "ext-amqp": "*",
+                "php": ">=8.2",
+                "symfony/messenger": "^6.4|^7.0"
             },
             "require-dev": {
-                "symfony/event-dispatcher": "^4.4|^5.0|^6.0",
-                "symfony/process": "^4.4|^5.0|^6.0",
-                "symfony/property-access": "^4.4|^5.0|^6.0",
-                "symfony/serializer": "^4.4|^5.0|^6.0"
+                "symfony/event-dispatcher": "^6.4|^7.0",
+                "symfony/process": "^6.4|^7.0",
+                "symfony/property-access": "^6.4|^7.0",
+                "symfony/serializer": "^6.4|^7.0"
             },
             "type": "symfony-messenger-bridge",
             "autoload": {
@@ -1765,7 +1765,7 @@
             "description": "Symfony AMQP extension Messenger Bridge",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/amqp-messenger/tree/v5.4.39"
+                "source": "https://github.com/symfony/amqp-messenger/tree/v7.0.0"
             },
             "funding": [
                 {
@@ -1781,7 +1781,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-18T08:26:06+00:00"
+            "time": "2023-09-10T14:36:18+00:00"
         },
         {
             "name": "symfony/clock",
