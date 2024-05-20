@@ -2,6 +2,7 @@
 
 namespace YoRus\BehatContext\Context;
 
+use Exception;
 use YoRus\BehatContext\Domain\Jwt\Configuration;
 use YoRus\BehatContext\Domain\BehatStore;
 use Behat\Behat\Context\Context;
@@ -33,8 +34,12 @@ class RestApiContext implements Context
      * @param BehatStore     $store
      * @param Configuration  $jwtConfiguration
      */
-    public function __construct(RestApiBrowser $restApiBrowser, JsonInspector $jsonContext, BehatStore $store, Configuration $jwtConfiguration)
-    {
+    public function __construct(
+        RestApiBrowser $restApiBrowser,
+        JsonInspector $jsonContext,
+        BehatStore $store,
+        Configuration $jwtConfiguration
+    ) {
         $this->restApiBrowser = $restApiBrowser;
         $this->jsonContext = $jsonContext;
         $this->store = $store;
@@ -42,11 +47,9 @@ class RestApiContext implements Context
     }
 
     /**
-     * @param string $header
-     * @param string $value
+     * @param string $api
      *
-     * @throws \Exception
-     *
+     * @throws Exception
      */
     private function iGetAJwtTokenFromWithBody(string $api): void
     {
@@ -58,7 +61,9 @@ class RestApiContext implements Context
         // Check status code is 200
         $statusCode = $this->restApiBrowser->getResponse()->getStatusCode();
         if ($statusCode !== 200) {
-            throw new \Exception(sprintf('Response header value is equals to 200, but value is equals to %s', $statusCode));
+            throw new Exception(
+                sprintf('Response header value is equals to 200, but value is equals to %s', $statusCode)
+            );
         }
 
         // Retrieve token
@@ -68,11 +73,9 @@ class RestApiContext implements Context
     }
 
     /**
-     * @param string $header
-     * @param string $value
+     * @param string $api
      *
-     * @throws \Exception
-     *
+     * @throws Exception
      * @Given I am authenticated on :api
      */
     public function iAmAuthenticatedOnWith(string $api): void
@@ -82,14 +85,14 @@ class RestApiContext implements Context
         }
 
         // Send token to request header of restApiBrowser
-        $this->restApiBrowser->addRequestHeader("Authorization", "Bearer ". $this->store->$api->token);
+        $this->restApiBrowser->addRequestHeader("Authorization", "Bearer " . $this->store->$api->token);
     }
 
     /**
      * @param string $header
      * @param string $value
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @Then the response header :header should be equal to :value
      */
@@ -99,14 +102,14 @@ class RestApiContext implements Context
         $headerInResponse = implode(',', $response->getHeader($header));
 
         if ($headerInResponse !== $value) {
-            throw new \Exception(sprintf('Response header value is equals to %s', $headerInResponse));
+            throw new Exception(sprintf('Response header value is equals to %s', $headerInResponse));
         }
     }
 
     /**
      * @param string $header
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @Then the response header :header should exist
      */
@@ -116,7 +119,7 @@ class RestApiContext implements Context
         $headerInResponse = $response->getHeader($header);
 
         if (empty($headerInResponse)) {
-            throw new \Exception(sprintf('Response header value does not contain `%s` key', $header));
+            throw new Exception(sprintf('Response header value does not contain `%s` key', $header));
         }
     }
 
@@ -125,12 +128,15 @@ class RestApiContext implements Context
      * @param string $url
      * @param string $header
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @Then I send a :method request to :url with :header header value retrieved from resource just created before
      */
-    public function iSendARequestToWithHeaderValueRetrievedFromResourceJustCreatedBefore(string $method, string $url, string $header): void
-    {
+    public function iSendARequestToWithHeaderValueRetrievedFromResourceJustCreatedBefore(
+        string $method,
+        string $url,
+        string $header
+    ): void {
         $this->theResponseHeaderShouldExist($header);
 
         $response = $this->restApiBrowser->getResponse();
@@ -143,7 +149,7 @@ class RestApiContext implements Context
     /**
      * Checks, whether the response content is null or empty string
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @Then the response should be empty
      */
@@ -153,7 +159,7 @@ class RestApiContext implements Context
         $message = "The response of the current page is not empty, it is: $actual";
 
         if (null !== $actual && "" !== $actual) {
-            throw new \Exception($message);
+            throw new Exception($message);
         }
     }
 }

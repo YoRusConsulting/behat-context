@@ -24,8 +24,7 @@ class BehatStore
      */
     public function getStoreValue(string $key): mixed
     {
-        if (!isset($this->store->$key))
-        {
+        if (!isset($this->store->$key)) {
             return null;
         }
 

@@ -32,7 +32,10 @@ class JwtConfigurationResolver implements ArgumentResolver
 
         $parameters = $constructor->getParameters();
         foreach ($parameters as $parameter) {
-            if (null !== $parameter->getType() && ($parameter->getType()->getName()) === 'YoRus\BehatContext\Domain\Jwt\Configuration') {
+            if (
+                null !== $parameter->getType()
+                && ($parameter->getType()->getName()) === 'YoRus\BehatContext\Domain\Jwt\Configuration'
+            ) {
                 $arguments[$parameter->name] = $this->jwtConfiguration;
             }
         }

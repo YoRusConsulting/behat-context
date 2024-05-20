@@ -32,7 +32,10 @@ class BehatStoreResolver implements ArgumentResolver
 
         $parameters = $constructor->getParameters();
         foreach ($parameters as $parameter) {
-            if (null !== $parameter->getType() && ($parameter->getType()->getName()) === 'YoRus\BehatContext\Domain\BehatStore') {
+            if (
+                null !== $parameter->getType()
+                && ($parameter->getType()->getName()) === 'YoRus\BehatContext\Domain\BehatStore'
+            ) {
                 $arguments[$parameter->name] = $this->behatStore;
             }
         }

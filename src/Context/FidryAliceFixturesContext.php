@@ -1,12 +1,13 @@
 <?php
 
-namespace YoRus\BehatContext;
+namespace YoRus\BehatContext\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\ORM\EntityManagerInterface;
+use Fidry\AliceDataFixtures\LoaderInterface;
 use Fidry\AliceDataFixtures\Persistence\PurgeMode;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+
 /**
  * FidryAliceFixturesContext
  *
@@ -14,21 +15,20 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  */
 class FidryAliceFixturesContext implements Context
 {
-    use ContainerAwareTrait;
-
-    /**
-     * @var string
-     */
-    private $basepath;
-
     private ?PurgeMode $purgeMode = null;
 
     /**
-     * @param string $basepath basepath
+     * @param EntityManagerInterface $entityManager
+     * @param LoaderInterface        $loader
+     * @param string                 $projectDir
+     * @param string|null            $basepath
      */
-    public function __construct(string $basepath = null)
-    {
-        $this->basepath = $basepath;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private LoaderInterface $loader,
+        private string $projectDir,
+        private ?string $basepath = null,
+    ) {
     }
 
     /**
@@ -75,12 +75,10 @@ class FidryAliceFixturesContext implements Context
      */
     private function loadFiles(array $files): void
     {
-        $em     = $this->getDoctrine();
-        $loader = $this->container->get('fidry_alice_data_fixtures.loader.doctrine');
-        $loader->load($files, [], [], $this->purgeMode);
+        $this->loader->load($files, [], [], $this->purgeMode);
 
-        $em->flush();
-        $em->clear();
+        $this->entityManager->flush();
+        $this->entityManager->clear();
     }
 
     /**
@@ -94,14 +92,6 @@ class FidryAliceFixturesContext implements Context
             $this->basepath = 'tests/fixtures';
         }
 
-        return $this->container->getParameter('kernel.project_dir').'/'.$this->basepath.'/'.$filename;
-    }
-
-    /**
-     * @return EntityManagerInterface
-     */
-    private function getDoctrine()
-    {
-        return $this->container->get('doctrine.orm.entity_manager');
+        return $this->projectDir . '/' . $this->basepath . '/' . $filename;
     }
 }

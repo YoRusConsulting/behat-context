@@ -1,6 +1,6 @@
 <?php
 
-namespace Alten\BehatContext\AmqpAdapter;
+namespace YoRus\BehatContext\AmqpAdapter;
 
 use Symfony\Component\Messenger\Transport\AmqpExt\Connection as AmqpConnection;
 
@@ -86,7 +86,6 @@ class SymfonyMessengerAdapter implements AdapterInterface
         }
 
         $this->getAmqpConnection($transport)->queue($queues[0])->purge();
-
     }
 
 

@@ -1,13 +1,12 @@
 <?php
 
-namespace YoRus\BehatContext;
+namespace YoRus\BehatContext\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use ReflectionException;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * DoctrineContext.
@@ -16,9 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  */
 class DoctrineContext implements Context
 {
-    use ContainerAwareTrait;
-
-
     /** @var string[] $entityMapping */
     private array $entityMapping;
 
@@ -105,11 +101,23 @@ class DoctrineContext implements Context
     public function theResultSetMustBe(TableNode $expectedData): void
     {
         if (count($expectedData->getHash()) < count($this->dataSet)) {
-            throw new \Exception(sprintf('The expected number of rows is lower than the number of rows obtained [expected: "%s", dataSet: "%s"]', count($expectedData->getHash()), count($this->dataSet)));
+            throw new \Exception(
+                sprintf(
+                    'The obtained number of rows is lower than expected [expected: "%s", dataSet: "%s"]',
+                    count($expectedData->getHash()),
+                    count($this->dataSet)
+                )
+            );
         }
 
         if (count($expectedData->getHash()) > count($this->dataSet)) {
-            throw new \Exception(sprintf('The expected number of rows is greater than the number of rows obtained [expected: "%s", dataSet: "%s"]', count($expectedData->getHash()), count($this->dataSet)));
+            throw new \Exception(
+                sprintf(
+                    'The obtained number of rows is greater than expected [expected: "%s", dataSet: "%s"]',
+                    count($expectedData->getHash()),
+                    count($this->dataSet)
+                )
+            );
         }
 
         foreach ($expectedData->getHash() as $rowNum => $expected) {
@@ -117,7 +125,14 @@ class DoctrineContext implements Context
                 $columnValue = $this->dataSet[$rowNum][strtolower($expectedColumnName)];
 
                 if ($expectedColumnValue !== $columnValue) {
-                    throw new \Exception(sprintf('Invalid result for query "%s", expected "%s" and found "%s"', $this->lastSqlRequest, $expectedColumnValue, $columnValue));
+                    throw new \Exception(
+                        sprintf(
+                            'Invalid result for query "%s", expected "%s" and found "%s"',
+                            $this->lastSqlRequest,
+                            $expectedColumnValue,
+                            $columnValue
+                        )
+                    );
                 }
             }
         }
@@ -135,7 +150,14 @@ class DoctrineContext implements Context
     {
         $this->executeSql(sprintf('SELECT COUNT(*) FROM %s WHERE TRUE', $table));
         if ($expected !== $this->dataSet[0]['count']) {
-            throw new \Exception(sprintf('Invalid rows number in table "%s", expected "%s" and found "%s"', $table, $expected, $this->dataSet[0]['count']));
+            throw new \Exception(
+                sprintf(
+                    'Invalid rows number in table "%s", expected "%s" and found "%s"',
+                    $table,
+                    $expected,
+                    $this->dataSet[0]['count']
+                )
+            );
         }
     }
 
@@ -143,18 +165,22 @@ class DoctrineContext implements Context
      * @Given the entity :entity with id :id has an entity attribute :attribute with value :attributeId
      * @throws \Exception|ReflectionException
      */
-    public function entityWithIdHasAnAttributeWithValue(string $entity, string $id, string $attribute, string $attributeId): void
-    {
+    public function entityWithIdHasAnAttributeWithValue(
+        string $entity,
+        string $id,
+        string $attribute,
+        string $attributeId
+    ): void {
         $entityObject = $this->findEntityWithIdentifier($entity, $id);
 
         if (null === $entityObject) {
-            throw new Exception('Entity not found');
+            throw new \Exception('Entity not found');
         }
 
         $attributeObject = $this->findEntityWithIdentifier($attribute, $attributeId);
 
         if (null === $attributeObject) {
-            throw new Exception('Entity not found');
+            throw new \Exception('Entity not found');
         }
 
         $reflexion = new \ReflectionClass($entityObject);

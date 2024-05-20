@@ -1,6 +1,6 @@
 <?php
 
-namespace YoRus\BehatContext;
+namespace YoRus\BehatContext\Context;
 
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,7 +53,8 @@ class DoctrineORMSchemaReloadContext implements Context
      * @BeforeSuite
      * @return void
      */
-    public static function beforeSuite() {
+    public static function beforeSuite()
+    {
         if (self::$staticExecMigration === true) {
             exec('php bin/console d:d:d --force');
             exec('php bin/console d:d:c');
@@ -83,8 +84,8 @@ class DoctrineORMSchemaReloadContext implements Context
             $tool->dropSchema($metadata);
             $tool->createSchema($metadata);
         }
-
     }
+
     /**
      * @return array
      */
@@ -95,7 +96,6 @@ class DoctrineORMSchemaReloadContext implements Context
 
     protected function generateTruncateSql(): string
     {
-//        $query = "SELECT table_name FROM information_schema.tables WHERE table_schema='public' and table_name!='migration_versions'";
         $query = "SELECT table_name FROM information_schema.tables WHERE table_schema='public'";
         $tables = array_column(
             $this->entityManager->getConnection()->fetchAllAssociative($query),
@@ -106,15 +106,15 @@ class DoctrineORMSchemaReloadContext implements Context
         $sqlDisable = $sqlTruncates = $sqlEnable = [];
 
         foreach ($tables as $tbl) {
-            $sqlDisable[] = 'ALTER TABLE "'.$tbl.'" DISABLE TRIGGER ALL;';
-            $sqlTruncates[] = '"'.$tbl.'"';
-            $sqlEnable [] = 'ALTER TABLE "'.$tbl.'" ENABLE TRIGGER ALL;';
+            $sqlDisable[] = 'ALTER TABLE "' . $tbl . '" DISABLE TRIGGER ALL;';
+            $sqlTruncates[] = '"' . $tbl . '"';
+            $sqlEnable [] = 'ALTER TABLE "' . $tbl . '" ENABLE TRIGGER ALL;';
         }
 
         $sqlTruncates = sprintf('truncate table %s;', implode(',', $sqlTruncates));
 
-        return implode(chr(10), $sqlDisable).chr(10).
-            $sqlTruncates.chr(10).
+        return implode(chr(10), $sqlDisable) . chr(10) .
+            $sqlTruncates . chr(10) .
             implode(chr(10), $sqlEnable);
     }
 }

@@ -21,39 +21,24 @@ class Configuration
     /**
      * @return array
      */
-   public function getConfiguration(): array
-   {
-       return $this->configuration;
-   }
+    public function getConfiguration(): array
+    {
+        return $this->configuration;
+    }
 
     /**
      * @param string $key
      *
      * @return array|null
      */
-   public function getConfigValue(string $key): ?array
-   {
-       if (!isset($this->configuration[$key])) {
-           return null;
-       }
+    public function getConfigValue(string $key): ?array
+    {
+        if (!isset($this->configuration[$key])) {
+            return null;
+        }
 
-       return $this->configuration[$key];
-   }
-
-    /**
-     * @param string $key
-     *
-     * @return string
-     * @throws \Exception
-     */
-   public function getResource(string $key): string
-   {
-       $configuration = $this->getConfigValue($key);
-
-       $this->checkConfiguration($configuration, $key, 'resource');
-
-       return $configuration['resource'];
-   }
+        return $this->configuration[$key];
+    }
 
     /**
      * @param string $key
@@ -61,14 +46,14 @@ class Configuration
      * @return string
      * @throws \Exception
      */
-   public function getUsername(string $key): string
-   {
-       $configuration = $this->getConfigValue($key);
+    public function getResource(string $key): string
+    {
+        $configuration = $this->getConfigValue($key);
 
-       $this->checkConfiguration($configuration, $key, 'username');
+        $this->checkConfiguration($configuration, $key, 'resource');
 
-       return $configuration['username'];
-   }
+        return $configuration['resource'];
+    }
 
     /**
      * @param string $key
@@ -76,30 +61,45 @@ class Configuration
      * @return string
      * @throws \Exception
      */
-   public function getPassword(string $key): string
-   {
-       $configuration = $this->getConfigValue($key);
+    public function getUsername(string $key): string
+    {
+        $configuration = $this->getConfigValue($key);
 
-       $this->checkConfiguration($configuration, $key, 'password');
+        $this->checkConfiguration($configuration, $key, 'username');
 
-       return $configuration['password'];
-   }
+        return $configuration['username'];
+    }
 
-   /**
-    * @param string $key
-    *
-    * @return string
-    * @throws \Exception
-    */
-   public function getJwtLoginResourceBody(string $key): string
-   {
-       $body = [
-           'username' => $this->getUsername($key),
-           'password' => $this->getPassword($key)
-       ];
+    /**
+     * @param string $key
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getPassword(string $key): string
+    {
+        $configuration = $this->getConfigValue($key);
 
-       return json_encode($body);
-   }
+        $this->checkConfiguration($configuration, $key, 'password');
+
+        return $configuration['password'];
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getJwtLoginResourceBody(string $key): string
+    {
+        $body = [
+            'username' => $this->getUsername($key),
+            'password' => $this->getPassword($key),
+        ];
+
+        return json_encode($body);
+    }
 
     /**
      * @param array  $configuration
@@ -109,14 +109,14 @@ class Configuration
      * @return void
      * @throws \Exception
      */
-   private function checkConfiguration(array $configuration, string $key, string $resource)
-   {
-       if (null === $configuration) {
-           throw new \Exception(sprintf('Resource %s not found in JWT configuration', $key));
-       }
+    private function checkConfiguration(array $configuration, string $key, string $resource)
+    {
+        if (null === $configuration) {
+            throw new \Exception(sprintf('Resource %s not found in JWT configuration', $key));
+        }
 
-       if (!isset($configuration[$resource])) {
-           throw new \Exception(sprintf('Resource `%s` not found in %s configuration', $resource, $key));
-       }
-   }
+        if (!isset($configuration[$resource])) {
+            throw new \Exception(sprintf('Resource `%s` not found in %s configuration', $resource, $key));
+        }
+    }
 }

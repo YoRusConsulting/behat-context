@@ -1,4 +1,17 @@
 services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    bind:
+      $projectDir: '%kernel.project_dir%'
+
+  YoRus\BehatContext\FidryAliceFixturesContext:
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '@fidry_alice_data_fixtures.loader.doctrine'
+      - %kernel.project_dir%
+      - "tests/Fixtures"
+
   YoRus\BehatContext\Domain\BehatStore: ~
 
   YoRus\BehatContext\Domain\Jwt\Configuration:

@@ -12,19 +12,22 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 /**
  * Class BehatContextExtension
  */
-class BehatContextExtension implements Extension {
-
+class BehatContextExtension implements Extension
+{
     /**
      * @inheritdoc
      */
-    public function getConfigKey() {
+    public function getConfigKey()
+    {
         return 'yorus_behat_context';
     }
 
     /**
      * @inheritdoc
      */
-    public function initialize(ExtensionManager $extensionManager) {}
+    public function initialize(ExtensionManager $extensionManager)
+    {
+    }
 
     /**
      * @inheritdoc
@@ -62,7 +65,7 @@ class BehatContextExtension implements Extension {
     /**
      * @inheritdoc
      */
-    public function process(ContainerBuilder $container) {
+    public function process(ContainerBuilder $container)
+    {
     }
-
 }

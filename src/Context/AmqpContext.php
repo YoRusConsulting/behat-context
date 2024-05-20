@@ -1,10 +1,11 @@
 <?php
 
-namespace YoRus\BehatContext;
+namespace YoRus\BehatContext\Context;
 
+use Alten\BehatContext\AmqpAdapter\SymfonyMessengerAdapter;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use YoRus\BehatContext\AmqpAdapter\AdapterInterface;
 
 /**
  * AmqpContext.
@@ -13,18 +14,20 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
  */
 class AmqpContext implements Context
 {
-    use ContainerAwareTrait;
-
     /**
-     * @var AmqpAdapter\AdapterInterface
+     * @var AdapterInterface
      */
     private $adapter;
+    private bool $setupQueuesAutomatically;
 
     /**
      * @param string[] $transports transports
      */
-    public function __construct(array $transports, string $adapterClass = AmqpAdapter\SymfonyMessengerAdapter::class, bool $setupQueuesAutomatically = true)
-    {
+    public function __construct(
+        array $transports,
+        string $adapterClass = SymfonyMessengerAdapter::class,
+        bool $setupQueuesAutomatically = true
+    ) {
         $this->adapter = new $adapterClass($transports);
         $this->setupQueuesAutomatically = $setupQueuesAutomatically;
     }
@@ -83,8 +86,11 @@ class AmqpContext implements Context
      *
      * @Given I publish in amqp queue :transport message :command with content:
      */
-    public function iPublishInAmqpQueueMessageWithContent(string $transport, string $command, PyStringNode $string): void
-    {
+    public function iPublishInAmqpQueueMessageWithContent(
+        string $transport,
+        string $command,
+        PyStringNode $string
+    ): void {
         $this->adapter->publish($transport, $string, $command);
     }
 
@@ -96,18 +102,34 @@ class AmqpContext implements Context
      *
      * @Then I acknowledge the content of next message in amqp queue :transport and its content is:
      */
-    public function iAcknowledgeTheContentOfTheNextMessageInAmqpTransportAndItsContentIs(string $transport, PyStringNode $dataExpected): void
-    {
+    public function iAcknowledgeTheContentOfTheNextMessageInAmqpTransportAndItsContentIs(
+        string $transport,
+        PyStringNode $dataExpected
+    ): void {
         $dataRetrieved = $this->adapter->acknowledgeAndGetNextMessageInTransport($transport);
         $dataRetrievedDecoded = json_decode($dataRetrieved);
 
         if (false === $dataRetrievedDecoded || null === $dataRetrievedDecoded) {
             if ($dataRetrieved != $dataExpected->getRaw()) { // string comparison
-                throw new \Exception(sprintf('Retrieved message %s from the queue %s is not equal to expected message %s', $dataRetrieved, $transport, $dataExpected));
+                throw new \Exception(
+                    sprintf(
+                        'Retrieved message %s from the queue %s is not equal to expected message %s',
+                        $dataRetrieved,
+                        $transport,
+                        $dataExpected
+                    )
+                );
             }
         } else {
             if ($dataRetrievedDecoded != json_decode($dataExpected->getRaw())) { // stdclass comparison
-                throw new \Exception(sprintf('Retrieved message %s from the queue %s is not equal to expected message %s', $dataRetrieved, $transport, $dataExpected));
+                throw new \Exception(
+                    sprintf(
+                        'Retrieved message %s from the queue %s is not equal to expected message %s',
+                        $dataRetrieved,
+                        $transport,
+                        $dataExpected
+                    )
+                );
             }
         }
     }
